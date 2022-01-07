@@ -7,8 +7,8 @@ let noise_context, image_clone;
 
 let layer_context;
 
-var canvas_w = 1024;
-var canvas_h = 1024;
+var canvas_w = 768;
+var canvas_h = 768;
 
 var middle_x = canvas_w / 2;
 var middle_y = canvas_h / 2;
@@ -25,6 +25,10 @@ var circle_equal = Math.random() < 0.333333;
 var circle_w = random_range(250, 450);
 var circle_h = circle_equal ? circle_w : random_range(250, 450);
 var circle_rotation = /*circle_equal ? 0 : */random_range(0, 360);
+
+var background_shape_rotation = random_range(0, 360);
+
+var mini_rotation = random_range(1, 2) % 2 == 0 ? random_range(-120, -60) : random_range(60, 120)
 
 var inner_circle_stroke_weights = [['5', 1000], ['10', 500], ['15', 100], ['30', 10], ['60', 1]];
 var inner_circle_stroked = Math.random() < 0.5 ? true : false;
@@ -46,7 +50,7 @@ for (var i = 0; i < 6; i++) {
 
 
 
-const noise_data = Uint32Array.from({ length: canvas_w * canvas_h }, () => Math.random() > 0.5 ? 0xFF000000 : 0);
+const noise_data = Uint32Array.from({ length: (canvas_w*2) * (canvas_h*2) }, () => Math.random() > 0.5 ? 0xFF000000 : 0);
 
 
 var mini_circle_color;
@@ -286,7 +290,7 @@ class MiniCircle {
             0,
             circle_w * (1 - (layer / total_layers)),
             circle_h * (1 - (layer / total_layers)),
-            degrees_to_radians(circle_rotation)
+            degrees_to_radians(mini_rotation)
         )
 
         ellipse(frame_coord[0], frame_coord[1], this.w, this.h)
@@ -315,7 +319,7 @@ class Line {
             0,
             circle_w * (1 - (layer / total_layers)),
             circle_h * (1 - (layer / total_layers)),
-            degrees_to_radians(circle_rotation)
+            degrees_to_radians(mini_rotation)
         )
         var last_coord = frame_coord
 
@@ -330,7 +334,7 @@ class Line {
                 0,
                 circle_w * (1 - (layer / total_layers)),
                 circle_h * (1 - (layer / total_layers)),
-                degrees_to_radians(circle_rotation)
+                degrees_to_radians(mini_rotation)
             )
 
 
@@ -388,7 +392,7 @@ function draw() {
 
     var ctx = noise_context.drawingContext
 
-    const img = new ImageData(new Uint8ClampedArray(noise_data.buffer), canvas_w, canvas_h);
+    const img = new ImageData(new Uint8ClampedArray(noise_data.buffer), canvas_w * 2, canvas_h * 2);
 
     ctx.putImageData(img, 0, 0);
 
@@ -419,7 +423,8 @@ function draw() {
     layer_context.translate(middle_x, middle_y);
     var scale = triangle_size + (Math.sin(mouse_move * 0.1) * traingle_scale);
     layer_context.scale(scale);
-    layer_context.rotate(degrees_to_radians(triangle_rotation--));
+    //layer_context.rotate(degrees_to_radians(triangle_rotation--));
+    layer_context.rotate(degrees_to_radians(background_shape_rotation))
 
     // pick shape for background
     background_shape_functions[background_shape]();
