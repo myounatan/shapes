@@ -1,5 +1,5 @@
 // seed
-//Math.seedrandom('0x4932d8g9e646f68AC8c248420045cb7b5e342342342378654');
+Math.seedrandom('0x4932d8g9e646f68AC8c248420045cb7b5e342342342378654');
 
 
 // variables
